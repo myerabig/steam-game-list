@@ -1,11 +1,6 @@
-* {
-    text-align: center;
-}
-
 #test-button {
     display: block;
     margin: auto;
-    margin-top: 50px;
 }
 
 #answer-pic {
@@ -13,5 +8,10 @@
 }
 
 #cors-button {
+    text-align: center;
     margin-top: 20px;
+}
+
+#answer {
+    text-align: center;
 }
