@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/steam-game-list/static/css/main.5185c9d4.css",
-    "main.js": "/steam-game-list/static/js/main.55b4ba49.js",
+    "main.css": "/steam-game-list/static/css/main.9c3139b4.css",
+    "main.js": "/steam-game-list/static/js/main.c9fdc83e.js",
     "static/js/787.28cb0dcd.chunk.js": "/steam-game-list/static/js/787.28cb0dcd.chunk.js",
     "index.html": "/steam-game-list/index.html",
-    "main.5185c9d4.css.map": "/steam-game-list/static/css/main.5185c9d4.css.map",
-    "main.55b4ba49.js.map": "/steam-game-list/static/js/main.55b4ba49.js.map",
+    "main.9c3139b4.css.map": "/steam-game-list/static/css/main.9c3139b4.css.map",
+    "main.c9fdc83e.js.map": "/steam-game-list/static/js/main.c9fdc83e.js.map",
     "787.28cb0dcd.chunk.js.map": "/steam-game-list/static/js/787.28cb0dcd.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.5185c9d4.css",
-    "static/js/main.55b4ba49.js"
+    "static/css/main.9c3139b4.css",
+    "static/js/main.c9fdc83e.js"
   ]
 }
