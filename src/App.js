@@ -44,7 +44,11 @@ function App() {
 		return fetch(url)
 			.then((response) => response.json())
 			.then((json) => {
-				setUsers((oldArray) => [...oldArray, json.response.players[0].personaname]);
+				let user = {
+					personaname: json.response.players[0].personaname,
+					avatarfull: json.response.players[0].avatarfull,
+				};
+				setUsers((oldArray) => [...oldArray, user]);
 			})
 			.catch((error) => console.error(error));
 	};
@@ -170,8 +174,9 @@ function App() {
 								''
 							)}
 							{users.map((user) => (
-								<div key={user}>
-									<p>{user}</p>
+								<div key={user.personaname}>
+									<img src={user.avatarfull} height="50px" />
+									{user.personaname}
 								</div>
 							))}
 						</Grid>
