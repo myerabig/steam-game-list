@@ -7,11 +7,15 @@ import secret from "./Resources/secret.json";
 import steamGameList from "./Resources/steamGameList.json";
 
 import Button from "@mui/material/Button";
+import Box from '@mui/material/Box';
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
+import Typography from '@mui/material/Typography';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
 function App() {
-	const [steamUserId, setSteamUserId] = useState("");
+    const [steamUserId, setSteamUserId] = useState("");
 
     const getData = async () => {
         let apiKey = secret["steam-api-key"];
@@ -61,9 +65,54 @@ function App() {
         },
     });
 
+
+    const [value, setValue] = React.useState('one');
+
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
+
     return (
         <div className="App">
             <ThemeProvider theme={theme2}>
+                <Box
+                    sx={{
+                        width: {
+                            xs: 400, // theme.breakpoints.up('xs')
+                            sm: 800, // theme.breakpoints.up('sm')
+                            md: 1500, // theme.breakpoints.up('md')
+                            lg: 2200, // theme.breakpoints.up('lg')
+                            xl: 2900, // theme.breakpoints.up('xl')
+                        },
+                        height: 100,
+                        backgroundColor: '#0D2840',
+                    }}
+                >
+                    <Typography component="legend">Website</Typography>
+                </Box>
+
+                <Grid
+                    container
+                    spacing={2}
+                    direction="column"
+                    justifyContent="left"
+                    alignItems="left"
+                >
+                    <Grid item>
+                        <Typography component="legend">Enter Steam ID</Typography>
+                    </Grid>
+                    <Grid item>
+                        <TextField id="outlined-basic" label="Steam ID" variant="outlined" />
+                    </Grid>
+                    <Grid item>
+                        <Button variant="contained" sx={{backgroundColor: '#165F8C',}}>ADD</Button>
+                    </Grid>
+                </Grid>
+
+
+
+
+
                 <Grid
                     container
                     spacing={4}
@@ -87,7 +136,7 @@ function App() {
                             id="steam-id"
                             label="Steam ID"
                             variant="outlined"
-							onChange={(e) => setSteamUserId(e.target.value)}
+                            onChange={(e) => setSteamUserId(e.target.value)}
                         />
                     </Grid>
                     <Grid item>
