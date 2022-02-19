@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/steam-game-list/static/css/main.073c9b0a.css",
+    "main.js": "/steam-game-list/static/js/main.5e8f8b11.js",
+    "static/js/787.28cb0dcd.chunk.js": "/steam-game-list/static/js/787.28cb0dcd.chunk.js",
+    "static/media/logo.svg": "/steam-game-list/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
+    "index.html": "/steam-game-list/index.html",
+    "main.073c9b0a.css.map": "/steam-game-list/static/css/main.073c9b0a.css.map",
+    "main.5e8f8b11.js.map": "/steam-game-list/static/js/main.5e8f8b11.js.map",
+    "787.28cb0dcd.chunk.js.map": "/steam-game-list/static/js/787.28cb0dcd.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.073c9b0a.css",
+    "static/js/main.5e8f8b11.js"
+  ]
+}
