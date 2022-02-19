@@ -1,0 +1,14 @@
+* {
+    text-align: center;
+}
+
+#test-button {
+    display: block;
+    margin: auto;
+    margin-top: 50px;
+    background-color: black;
+}
+
+#answer-pic {
+    height: 500px;
+}
