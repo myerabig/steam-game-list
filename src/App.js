@@ -33,7 +33,7 @@ function App() {
 
     const getUsername = async (userId) => {
         let url =
-            "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" +
+            "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" +
             apiKey +
             "&steamids=" +
             userId +
