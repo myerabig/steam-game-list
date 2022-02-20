@@ -11,12 +11,17 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import { CardActions } from '@mui/material';
 
 function App() {
 	const [steamUserId, setSteamUserId] = useState([]);
 	const [steamUserIds, setSteamUserIds] = useState([]);
 	const [commonGames, setCommonGames] = useState([]);
 	const [users, setUsers] = useState([]);
+	const [gameImageError, setGameImageError] = useState(false);
 
 	const apiKey = secret['steam-api-key'];
 
@@ -91,18 +96,16 @@ function App() {
 					let gameMatch = steamGameList.applist.apps.find((game) => game.appid === gameId);
 
 					if (gameMatch) {
-						common.push(gameMatch.name);
+						let gameObject = {
+							appid: gameId,
+							name: gameMatch.name,
+						};
+						common.push(gameObject);
 					}
 				});
 
-				// Sort by playtime
-				// common.sort(
-				// 	(a, b) =>
-				// 		parseFloat(b.playtime_forever) -
-				// 		parseFloat(a.playtime_forever)
-				// );
+				common.sort((a, b) => a.name.toUpperCase().localeCompare(b.name.toUpperCase()));
 
-				common.sort();
 				setCommonGames(common);
 			})
 			.catch((err) => console.log(err));
@@ -112,6 +115,12 @@ function App() {
 		await getUsername(steamUserId);
 		setSteamUserIds((oldArray) => [...oldArray, steamUserId]);
 		setSteamUserId('');
+	};
+
+	const handleMissingGameImage = (e, id) => {
+		e.target.onerror = null;
+		document.getElementsByClassName(id)[0].src =
+			'https://www.pngitem.com/pimgs/m/468-4685484_transparent-video-game-clipart-game-console-clipart-hd.png';
 	};
 
 	return (
@@ -187,7 +196,7 @@ function App() {
 						xs={9}
 						spacing={4}
 						direction="column"
-						justifyContent="center"
+						justifyContent="flex-start"
 						alignItems="center"
 					>
 						<Grid item>
@@ -198,9 +207,28 @@ function App() {
 						<Grid item>
 							{commonGames.length > 0 ? <h3>{commonGames.length} games:</h3> : ''}
 							{commonGames.map((game) => (
-								<div key={game}>
-									<p>{game}</p>
-								</div>
+								<Card sx={{ display: 'flex', margin: '10px' }} elevation={6}>
+									<Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '90%' }}>
+										<CardMedia
+											className={'gamecard' + game.appid}
+											component="img"
+											sx={{ height: 100, width: 350 }}
+											image={getGameImage(game.appid)}
+											alt="Game Cover"
+											onError={(e) => handleMissingGameImage(e, 'gamecard' + game.appid)}
+										/>
+										<CardContent>
+											<Typography component="div" variant="h5">
+												{game.name}
+											</Typography>
+										</CardContent>
+									</Box>
+									<CardActions>
+										<Button size="small" color="primary" variant="contained">
+											Details
+										</Button>
+									</CardActions>
+								</Card>
 							))}
 						</Grid>
 					</Grid>
