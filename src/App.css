@@ -1,17 +1,18 @@
+* {
+    font-family: "Poppins", sans-serif;
+}
+
+h1,
+h3 {
+    color: white;
+}
+
 #list-button {
     display: block;
     margin: auto;
 }
 
-#answer-pic {
-    height: 300px;
-}
-
 #cors-button {
     text-align: center;
     margin-left: 20px;
-}
-
-#answer {
-    text-align: center;
 }

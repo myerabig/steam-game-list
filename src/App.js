@@ -21,14 +21,13 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import { AlignHorizontalCenter } from '@mui/icons-material';
+import { AlignHorizontalCenter } from "@mui/icons-material";
 
 function App() {
     const [steamUserId, setSteamUserId] = useState([]);
     const [steamUserIds, setSteamUserIds] = useState([]);
     const [commonGames, setCommonGames] = useState([]);
     const [users, setUsers] = useState([]);
-    const [gameImageError, setGameImageError] = useState(false);
 
     const [modalOpen, setmodalOpen] = useState(false);
     const [modalData, setModalData] = useState({
@@ -80,6 +79,7 @@ function App() {
                 let user = {
                     personaname: json.response.players[0].personaname,
                     avatarfull: json.response.players[0].avatarfull,
+                    steamid: json.response.players[0].steamid,
                 };
                 setUsers((oldArray) => [...oldArray, user]);
             })
@@ -167,26 +167,63 @@ function App() {
             "https://www.pngitem.com/pimgs/m/468-4685484_transparent-video-game-clipart-game-console-clipart-hd.png";
     };
 
+    const removeUser = (user) => {
+        let index = 0;
+        for (let i = 0; i < users.length; i++) {
+            if (users[i].personaname === user.personaname) {
+                index = i;
+                break;
+            }
+        }
+
+        if (users.length > 1) {
+            let temp = [...users];
+            temp.splice(index, 1);
+            setUsers(temp);
+        } else {
+            setUsers([]);
+        }
+
+        if (steamUserIds.length > 1) {
+            let temp = [...steamUserIds];
+            temp.splice(index, 1);
+            setSteamUserIds(temp);
+        } else {
+            setSteamUserIds([]);
+        }
+    };
+
     return (
-        <div className="App" style={{
-            backgroundColor: '#0D2840',
-            height: '100%',
-        }}>
+        <div
+            className="App"
+            style={{
+                backgroundColor: "#0D2840",
+                height: "100%",
+            }}
+        >
             <ThemeProvider theme={theme}>
                 <Box
                     sx={{
-                        width: '100%',
+                        width: "100%",
                         height: 100,
-                        backgroundColor: '#165F8C',
-                        marginBottom: '30px',
+                        backgroundColor: "#28292b",
+                        marginBottom: "30px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
                     }}
                 >
+                    <Typography sx={{ float: "left", marginLeft: "20px" }}>
+                        <h1>"What Should We Play?"</h1>
+                    </Typography>
                     <Button
                         id="cors-button"
-                        color="primary"
-                        variant="outlined"
+                        color="warning"
+                        variant="contained"
                         target="_blank"
                         href="https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf?hl=en"
+                        align="right"
+                        sx={{ float: "right", marginRight: "20px" }}
                     >
                         Download CORS Blocker
                     </Button>
@@ -204,7 +241,7 @@ function App() {
                     >
                         <Grid item>
                             <TextField
-                                sx={{ width: "100%", backgroundColor: '#fafafa' }}
+                                sx={{ width: "100%", backgroundColor: "#fafafa" }}
                                 id="steam-id"
                                 label="Steam ID"
                                 variant="outlined"
@@ -213,7 +250,11 @@ function App() {
                             />
                         </Grid>
                         <Grid item>
-                            <Button variant="contained" sx={{ backgroundColor: '#165F8C', width: "100%" }} onClick={handleIdClick}>
+                            <Button
+                                variant="contained"
+                                sx={{ backgroundColor: "#165F8C", width: "100%" }}
+                                onClick={handleIdClick}
+                            >
                                 ADD
                             </Button>
                         </Grid>
@@ -225,17 +266,50 @@ function App() {
                                     <h3>{users.length} Users:</h3>
                                 )
                             ) : (
-                                ''
+                                ""
                             )}
                             {users.map((user) => (
                                 <div key={user.personaname}>
-                                    <Card sx={{ display: 'flex', margin: '10px' }} elevation={6}>
-                                        <Box sx={{ display: 'flex', flexDirection: 'row', width: '90%' }}>
+                                    <Card sx={{ display: "flex", margin: "10px" }} elevation={6}>
+                                        <Box
+                                            sx={{
+                                                display: "flex",
+                                                flexDirection: "row",
+                                                width: "90%",
+                                                fontFamily: "Poppins",
+                                                alignItems: "center",
+                                            }}
+                                        >
+                                            <CardMedia
+                                                className={"usercard" + user.personaname}
+                                                component="img"
+                                                sx={{ height: 80, width: 80 }}
+                                                image={user.avatarfull}
+                                                alt="User Avatar"
+                                            />
                                             <CardContent>
-                                                <img src={user.avatarfull} height="50px" />
-                                                <Typography sx={{ float: 'right', paddingTop: '19px', paddingLeft: '15px' }}>{user.personaname}</Typography>
+                                                <Typography
+                                                    component="div"
+                                                    variant="h6"
+                                                    sx={{
+                                                        fontFamily: "Poppins",
+                                                        padding: "0px !important",
+                                                        marginLeft: "10px",
+                                                    }}
+                                                >
+                                                    {user.personaname}
+                                                </Typography>
                                             </CardContent>
                                         </Box>
+                                        <CardActions>
+                                            <IconButton
+                                                aria-label="close"
+                                                onClick={() => removeUser(user)}
+                                                color="warning"
+                                            >
+                                                <CloseIcon />
+                                            </IconButton>
+                                        </CardActions>
                                     </Card>
                                 </div>
                             ))}
@@ -252,12 +326,17 @@ function App() {
                         width="100%"
                     >
                         <Grid item>
-                            <Button id="list-button" variant="contained" color="primary" onClick={getData}>
+                            <Button
+                                id="list-button"
+                                variant="contained"
+                                sx={{ backgroundColor: "#165f8c" }}
+                                onClick={getData}
+                            >
                                 Generate Game List
                             </Button>
                         </Grid>
                         <Grid item>
-                            {commonGames.length > 0 ? <h3>{commonGames.length} games:</h3> : ""}
+                            {commonGames.length > 0 ? <h3>{commonGames.length} Games:</h3> : ""}
                             {commonGames.map((game) => (
                                 <Card sx={{ display: "flex", margin: "10px" }} elevation={6}>
                                     <Box
@@ -277,15 +356,19 @@ function App() {
                                             onError={(e) => handleMissingGameImage(e, "gamecard" + game.appid)}
                                         />
                                         <CardContent>
-                                            <Typography component="div" variant="h5">
+                                            <Typography
+                                                component="div"
+                                                variant="h5"
+                                                sx={{ fontFamily: "Poppins", marginLeft: "15px", marginRight: "15px" }}
+                                            >
                                                 {game.name}
                                             </Typography>
                                         </CardContent>
                                     </Box>
                                     <CardActions>
                                         <Button
+                                            sx={{ backgroundColor: "#165f8c" }}
                                             size="small"
-                                            color="primary"
                                             variant="contained"
                                             onClick={() => handleClickOpen(game)}
                                         >
@@ -327,15 +410,11 @@ function App() {
                                                         <br />
                                                         <br />
                                                         <b>Total Playtime:</b>{" "}
-                                                        {(Math.round(modalData.total_playtime * 100) / 100).toFixed(
-                                                            2
-                                                        )}{" "}
+                                                        {(Math.round(modalData.total_playtime * 100) / 100).toFixed(2)}{" "}
                                                         hours
                                                         <br />
                                                         <b>Average Playtime:</b>{" "}
-                                                        {(Math.round(modalData.avg_playtime * 100) / 100).toFixed(
-                                                            2
-                                                        )}{" "}
+                                                        {(Math.round(modalData.avg_playtime * 100) / 100).toFixed(2)}{" "}
                                                         hours
                                                     </Typography>
                                                 </div>
