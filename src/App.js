@@ -21,12 +21,14 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+import { AlignHorizontalCenter } from '@mui/icons-material';
 
 function App() {
     const [steamUserId, setSteamUserId] = useState([]);
     const [steamUserIds, setSteamUserIds] = useState([]);
     const [commonGames, setCommonGames] = useState([]);
     const [users, setUsers] = useState([]);
+    const [gameImageError, setGameImageError] = useState(false);
 
     const [modalOpen, setmodalOpen] = useState(false);
     const [modalData, setModalData] = useState({
@@ -166,23 +168,17 @@ function App() {
     };
 
     return (
-        <div className="App">
+        <div className="App" style={{
+            backgroundColor: '#0D2840',
+            height: '100%',
+        }}>
             <ThemeProvider theme={theme}>
                 <Box
                     sx={{
-                        width: {
-                            xs: 400, // theme.breakpoints.up('xs')
-                            sm: 800, // theme.breakpoints.up('sm')
-                            md: 1500, // theme.breakpoints.up('md')
-                            lg: 2200, // theme.breakpoints.up('lg')
-                            xl: 2900, // theme.breakpoints.up('xl')
-                        },
+                        width: '100%',
                         height: 100,
-                        backgroundColor: "#0D2840",
-                        marginBottom: "30px",
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
+                        backgroundColor: '#165F8C',
+                        marginBottom: '30px',
                     }}
                 >
                     <Button
@@ -203,17 +199,21 @@ function App() {
                         spacing={2}
                         direction="column"
                         justifyContent="flex-start"
-                        alignItems="center"
+                        alignItems="left"
+                        padding="10px"
                     >
                         <Grid item>
                             <TextField
+                                sx={{ width: "100%", backgroundColor: '#fafafa' }}
                                 id="steam-id"
                                 label="Steam ID"
                                 variant="outlined"
                                 value={steamUserId}
                                 onChange={(e) => setSteamUserId(e.target.value)}
                             />
-                            <Button variant="contained" sx={{ backgroundColor: "#165F8C" }} onClick={handleIdClick}>
+                        </Grid>
+                        <Grid item>
+                            <Button variant="contained" sx={{ backgroundColor: '#165F8C', width: "100%" }} onClick={handleIdClick}>
                                 ADD
                             </Button>
                         </Grid>
@@ -225,12 +225,18 @@ function App() {
                                     <h3>{users.length} Users:</h3>
                                 )
                             ) : (
-                                ""
+                                ''
                             )}
                             {users.map((user) => (
                                 <div key={user.personaname}>
-                                    <img src={user.avatarfull} height="50px" alt={user.personaname} />
-                                    {user.personaname}
+                                    <Card sx={{ display: 'flex', margin: '10px' }} elevation={6}>
+                                        <Box sx={{ display: 'flex', flexDirection: 'row', width: '90%' }}>
+                                            <CardContent>
+                                                <img src={user.avatarfull} height="50px" />
+                                                <Typography sx={{ float: 'right', paddingTop: '19px', paddingLeft: '15px' }}>{user.personaname}</Typography>
+                                            </CardContent>
+                                        </Box>
+                                    </Card>
                                 </div>
                             ))}
                         </Grid>
