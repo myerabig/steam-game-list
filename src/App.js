@@ -153,6 +153,10 @@ function App() {
                 setCommonGames(common);
             })
             .catch((err) => console.log(err));
+
+        if (users.length === 0) {
+            setCommonGames([]);
+        }
     };
 
     const handleIdClick = () => {
@@ -287,13 +291,15 @@ function App() {
                                                 image={user.avatarfull}
                                                 alt="User Avatar"
                                             />
-                                            <CardContent>
+                                            <CardContent
+                                                sx={{ paddingBottom: "0px !important", paddingTop: "0px !important" }}
+                                            >
                                                 <Typography
                                                     component="div"
                                                     variant="h6"
                                                     sx={{
                                                         fontFamily: "Poppins",
-                                                        padding: "0px !important",
+                                                        padding: "0px",
                                                         marginLeft: "10px",
                                                     }}
                                                 >
