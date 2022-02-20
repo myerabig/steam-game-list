@@ -36,8 +36,11 @@ function App() {
     const handleClickOpen = (game) => {
         let image = getGameImage(game.appid);
         let data = {
+            appid: game.appid,
             title: game.name,
             image: image,
+            total_playtime: game.total_playtime,
+            avg_playtime: game.avg_playtime,
         };
         setModalData(data);
         setmodalOpen(true);
@@ -85,6 +88,20 @@ function App() {
         return "https://steamcdn-a.akamaihd.net/steam/apps/" + appId + "/library_600x900_2x.jpg";
     };
 
+    const calculateTotalPlaytime = (gameId, allGames) => {
+        let total = 0;
+
+        allGames.forEach((gameList) => {
+            total += gameList.find((game) => game.appid === gameId).playtime_forever;
+        });
+
+        return total / 60;
+    };
+
+    const calculateAvgPlaytime = (gameId, allGames) => {
+        return calculateTotalPlaytime(gameId, allGames) / users.length;
+    };
+
     const getData = async () => {
         Promise.all(steamUserIds.map((v) => getGameList(v)))
             .then((resolvedValues) => {
@@ -122,6 +139,8 @@ function App() {
                         let gameObject = {
                             appid: gameId,
                             name: gameMatch.name,
+                            total_playtime: calculateTotalPlaytime(gameId, allGames),
+                            avg_playtime: calculateAvgPlaytime(gameId, allGames),
                         };
                         common.push(gameObject);
                     }
@@ -228,7 +247,7 @@ function App() {
                     >
                         <Grid item>
                             <Button id="list-button" variant="contained" color="primary" onClick={getData}>
-                                What games do we have in common?
+                                Generate Game List
                             </Button>
                         </Grid>
                         <Grid item>
@@ -290,9 +309,28 @@ function App() {
                                                 <img src={modalData.image} width="150px" />
                                                 <div>
                                                     <Typography gutterBottom sx={{ marginLeft: "20px" }}>
-                                                        Cras mattis consectetur purus sit amet fermentum. Cras justo
-                                                        odio, dapibus ac facilisis in, egestas eget quam. Morbi leo
-                                                        risus, porta ac consectetur ac, vestibulum at eros.
+                                                        <a
+                                                            href={
+                                                                "https://store.steampowered.com/app/" + modalData.appid
+                                                            }
+                                                            target="_blank"
+                                                            rel="noreferrer"
+                                                        >
+                                                            Store Link
+                                                        </a>
+                                                        <br />
+                                                        <br />
+                                                        <b>Total Playtime:</b>{" "}
+                                                        {(Math.round(modalData.total_playtime * 100) / 100).toFixed(
+                                                            2
+                                                        )}{" "}
+                                                        hours
+                                                        <br />
+                                                        <b>Average Playtime:</b>{" "}
+                                                        {(Math.round(modalData.avg_playtime * 100) / 100).toFixed(
+                                                            2
+                                                        )}{" "}
+                                                        hours
                                                     </Typography>
                                                 </div>
                                             </DialogContent>
