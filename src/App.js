@@ -111,8 +111,8 @@ function App() {
 			.catch((err) => console.log(err));
 	};
 
-	const handleIdClick = async () => {
-		await getUsername(steamUserId);
+	const handleIdClick = () => {
+		getUsername(steamUserId);
 		setSteamUserIds((oldArray) => [...oldArray, steamUserId]);
 		setSteamUserId('');
 	};
@@ -198,6 +198,7 @@ function App() {
 						direction="column"
 						justifyContent="flex-start"
 						alignItems="center"
+						width="100%"
 					>
 						<Grid item>
 							<Button id="list-button" variant="contained" color="primary" onClick={getData}>
@@ -208,7 +209,14 @@ function App() {
 							{commonGames.length > 0 ? <h3>{commonGames.length} games:</h3> : ''}
 							{commonGames.map((game) => (
 								<Card sx={{ display: 'flex', margin: '10px' }} elevation={6}>
-									<Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '90%' }}>
+									<Box
+										sx={{
+											display: 'flex',
+											flexDirection: 'row',
+											alignItems: 'center',
+											width: '90%',
+										}}
+									>
 										<CardMedia
 											className={'gamecard' + game.appid}
 											component="img"
