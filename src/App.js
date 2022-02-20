@@ -1,20 +1,26 @@
-import React, { useState } from 'react';
-import { ThemeProvider } from '@material-ui/core/styles';
-import theme from './theme';
+import React, { useState } from "react";
+import { ThemeProvider } from "@material-ui/core/styles";
+import theme from "./theme";
 
-import './App.css';
-import secret from './Resources/secret.json';
-import steamGameList from './Resources/steamGameList.json';
+import "./App.css";
+import secret from "./Resources/secret.json";
+import steamGameList from "./Resources/steamGameList.json";
 
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import { CardActions } from '@mui/material';
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import { CardActions } from "@mui/material";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 import { AlignHorizontalCenter } from '@mui/icons-material';
 
 function App() {
@@ -24,15 +30,33 @@ function App() {
     const [users, setUsers] = useState([]);
     const [gameImageError, setGameImageError] = useState(false);
 
-    const apiKey = secret['steam-api-key'];
+    const [modalOpen, setmodalOpen] = useState(false);
+    const [modalData, setModalData] = useState({
+        title: "",
+        image: "",
+    });
+    const handleClickOpen = (game) => {
+        let image = getGameImage(game.appid);
+        let data = {
+            title: game.name,
+            image: image,
+        };
+        setModalData(data);
+        setmodalOpen(true);
+    };
+    const handleClose = () => {
+        setmodalOpen(false);
+    };
+
+    const apiKey = secret["steam-api-key"];
 
     const getGameList = async (userId) => {
         let url =
-            'https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=' +
+            "https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=" +
             apiKey +
-            '&steamid=' +
+            "&steamid=" +
             userId +
-            '&format=json';
+            "&format=json";
 
         return fetch(url)
             .then((response) => response.json())
@@ -41,11 +65,11 @@ function App() {
 
     const getUsername = async (userId) => {
         let url =
-            'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=' +
+            "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" +
             apiKey +
-            '&steamids=' +
+            "&steamids=" +
             userId +
-            '&format=json';
+            "&format=json";
 
         return fetch(url)
             .then((response) => response.json())
@@ -60,7 +84,7 @@ function App() {
     };
 
     const getGameImage = (appId) => {
-        return 'https://steamcdn-a.akamaihd.net/steam/apps/' + appId + '/library_600x900_2x.jpg';
+        return "https://steamcdn-a.akamaihd.net/steam/apps/" + appId + "/library_600x900_2x.jpg";
     };
 
     const getData = async () => {
@@ -112,25 +136,23 @@ function App() {
             .catch((err) => console.log(err));
     };
 
-    const handleIdClick = async () => {
-        await getUsername(steamUserId);
+    const handleIdClick = () => {
+        getUsername(steamUserId);
         setSteamUserIds((oldArray) => [...oldArray, steamUserId]);
-        setSteamUserId('');
+        setSteamUserId("");
     };
 
     const handleMissingGameImage = (e, id) => {
         e.target.onerror = null;
         document.getElementsByClassName(id)[0].src =
-            'https://www.pngitem.com/pimgs/m/468-4685484_transparent-video-game-clipart-game-console-clipart-hd.png';
+            "https://www.pngitem.com/pimgs/m/468-4685484_transparent-video-game-clipart-game-console-clipart-hd.png";
     };
 
     return (
-        <div className="App"
-            style={{
-                backgroundColor: '#0D2840',
-                height: '100%',
-            }}
-        >
+        <div className="App" style={{
+            backgroundColor: '#0D2840',
+            height: '100%',
+        }}>
             <ThemeProvider theme={theme}>
                 <Box
                     sx={{
@@ -140,14 +162,11 @@ function App() {
                         marginBottom: '30px',
                     }}
                 >
-                    <Typography sx={{ float: 'left', marginLeft: '20px', }}><h1>Website</h1></Typography>
                     <Button
                         id="cors-button"
-                        color="error"
+                        color="primary"
                         variant="outlined"
                         target="_blank"
-                        align="right"
-                        sx={{ float: 'right', marginRight: '20px', }}
                         href="https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf?hl=en"
                     >
                         Download CORS Blocker
@@ -211,6 +230,7 @@ function App() {
                         direction="column"
                         justifyContent="flex-start"
                         alignItems="center"
+                        width="100%"
                     >
                         <Grid item>
                             <Button id="list-button" variant="contained" color="primary" onClick={getData}>
@@ -218,17 +238,24 @@ function App() {
                             </Button>
                         </Grid>
                         <Grid item>
-                            {commonGames.length > 0 ? <h3>{commonGames.length} games:</h3> : ''}
+                            {commonGames.length > 0 ? <h3>{commonGames.length} games:</h3> : ""}
                             {commonGames.map((game) => (
-                                <Card sx={{ display: 'flex', margin: '10px' }} elevation={6}>
-                                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '90%' }}>
+                                <Card sx={{ display: "flex", margin: "10px" }} elevation={6}>
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            flexDirection: "row",
+                                            alignItems: "center",
+                                            width: "90%",
+                                        }}
+                                    >
                                         <CardMedia
-                                            className={'gamecard' + game.appid}
+                                            className={"gamecard" + game.appid}
                                             component="img"
                                             sx={{ height: 100, width: 350 }}
                                             image={getGameImage(game.appid)}
                                             alt="Game Cover"
-                                            onError={(e) => handleMissingGameImage(e, 'gamecard' + game.appid)}
+                                            onError={(e) => handleMissingGameImage(e, "gamecard" + game.appid)}
                                         />
                                         <CardContent>
                                             <Typography component="div" variant="h5">
@@ -237,9 +264,50 @@ function App() {
                                         </CardContent>
                                     </Box>
                                     <CardActions>
-                                        <Button size="small" color="primary" variant="contained">
+                                        <Button
+                                            size="small"
+                                            color="primary"
+                                            variant="contained"
+                                            onClick={() => handleClickOpen(game)}
+                                        >
                                             Details
                                         </Button>
+                                        <Dialog
+                                            onClose={handleClose}
+                                            aria-labelledby="customized-dialog-title"
+                                            open={modalOpen}
+                                        >
+                                            <DialogTitle>
+                                                {modalData.title}
+                                                <IconButton
+                                                    aria-label="close"
+                                                    onClick={handleClose}
+                                                    sx={{
+                                                        position: "absolute",
+                                                        right: 8,
+                                                        top: 8,
+                                                        color: "#F9912B",
+                                                    }}
+                                                >
+                                                    <CloseIcon />
+                                                </IconButton>
+                                            </DialogTitle>
+                                            <DialogContent dividers sx={{ display: "flex", flexDirection: "row" }}>
+                                                <img src={modalData.image} width="150px" />
+                                                <div>
+                                                    <Typography gutterBottom sx={{ marginLeft: "20px" }}>
+                                                        Cras mattis consectetur purus sit amet fermentum. Cras justo
+                                                        odio, dapibus ac facilisis in, egestas eget quam. Morbi leo
+                                                        risus, porta ac consectetur ac, vestibulum at eros.
+                                                    </Typography>
+                                                </div>
+                                            </DialogContent>
+                                            <DialogActions>
+                                                <Button sx={{ color: "#F9912B" }} onClick={handleClose}>
+                                                    CLOSE
+                                                </Button>
+                                            </DialogActions>
+                                        </Dialog>
                                     </CardActions>
                                 </Card>
                             ))}
