@@ -21,7 +21,6 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import { AlignHorizontalCenter } from "@mui/icons-material";
 
 function App() {
     const [steamUserId, setSteamUserId] = useState([]);
@@ -220,17 +219,29 @@ function App() {
                     <Typography sx={{ float: "left", marginLeft: "20px" }}>
                         <h1>"What Should We Play?"</h1>
                     </Typography>
-                    <Button
-                        id="cors-button"
-                        color="warning"
-                        variant="contained"
-                        target="_blank"
-                        href="https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf?hl=en"
-                        align="right"
-                        sx={{ float: "right", marginRight: "20px" }}
-                    >
-                        Download CORS Blocker
-                    </Button>
+                    <div>
+                        <Button
+                            id="cors-button"
+                            color="primary"
+                            variant="contained"
+                            target="_blank"
+                            href="https://www.steamidfinder.com/"
+                            align="right"
+                        >
+                            Find a Steam ID
+                        </Button>
+                        <Button
+                            id="cors-button"
+                            color="warning"
+                            variant="contained"
+                            target="_blank"
+                            href="https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf?hl=en"
+                            align="right"
+                            sx={{ float: "right", marginRight: "20px" }}
+                        >
+                            Download CORS Blocker
+                        </Button>
+                    </div>
                 </Box>
                 <Grid container direction="row" justifyContent="center" alignItems="flex-start">
                     <Grid
