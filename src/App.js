@@ -21,12 +21,17 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+import Select from "@mui/material/Select";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
 
 function App() {
     const [steamUserId, setSteamUserId] = useState([]);
     const [steamUserIds, setSteamUserIds] = useState([]);
     const [commonGames, setCommonGames] = useState([]);
     const [users, setUsers] = useState([]);
+
+    const [sortMethod, setSortMethod] = useState("titleasc");
 
     const [modalOpen, setmodalOpen] = useState(false);
     const [modalData, setModalData] = useState({
@@ -147,9 +152,8 @@ function App() {
                     }
                 });
 
-                common.sort((a, b) => a.name.toUpperCase().localeCompare(b.name.toUpperCase()));
-
                 setCommonGames(common);
+                sortGames(sortMethod, common);
             })
             .catch((err) => console.log(err));
 
@@ -194,6 +198,28 @@ function App() {
         } else {
             setSteamUserIds([]);
         }
+    };
+
+    const handleSortChange = (e) => {
+        setSortMethod(e.target.value);
+        sortGames(e.target.value, commonGames);
+    };
+
+    const sortGames = (method, games) => {
+        let temp = [...games];
+
+        if (method === "titleasc") {
+            temp.sort((a, b) => a.name.toUpperCase().localeCompare(b.name.toUpperCase()));
+        } else if (method === "titledesc") {
+            temp.sort((a, b) => b.name.toUpperCase().localeCompare(a.name.toUpperCase()));
+        } else if (method === "timedesc") {
+            temp.sort((a, b) => b.total_playtime - a.total_playtime);
+        } else if (method === "timeasc") {
+            temp.sort((a, b) => a.total_playtime - b.total_playtime);
+        }
+
+        setCommonGames(temp);
+        console.log(temp);
     };
 
     return (
@@ -353,7 +379,34 @@ function App() {
                             </Button>
                         </Grid>
                         <Grid item>
-                            {commonGames.length > 0 ? <h3>{commonGames.length} Games:</h3> : ""}
+                            {commonGames.length > 0 ? (
+                                <div id="sortFilterBar">
+                                    <h3>{commonGames.length} Games:</h3>
+                                    <div>
+                                        <InputLabel id="sort-label" sx={{color: 'white'}}>Sort by</InputLabel>
+                                        <Select
+                                            labelId="sort-label"
+                                            id="demo-simple-select"
+                                            value={sortMethod}
+                                            label="Sort by"
+                                            onChange={handleSortChange}
+                                            sx={{
+                                                backgroundColor: "white",
+                                                border: "1px solid black",
+                                                padding: "0 5px 0 5px",
+                                                fontFamily: "unset",
+                                            }}
+                                        >
+                                            <MenuItem value={"titleasc"}>Title (ascending)</MenuItem>
+                                            <MenuItem value={"titledesc"}>Title (descending)</MenuItem>
+                                            <MenuItem value={"timedesc"}>Playtime (highest first)</MenuItem>
+                                            <MenuItem value={"timeasc"}>Playtime (lowest first)</MenuItem>
+                                        </Select>
+                                    </div>
+                                </div>
+                            ) : (
+                                ""
+                            )}
                             {commonGames.map((game) => (
                                 <Card sx={{ display: "flex", margin: "10px" }} elevation={6}>
                                     <Box
